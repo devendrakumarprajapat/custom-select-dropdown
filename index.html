@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Custom select dropdown component">
+  <meta name="author" content="Devendra Kumar Prajapat">
+  <title>Custom Select Dropdown</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+    html {
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    *,
+    *:before,
+    *:after {
+      box-sizing: inherit;
+    }
+
+    body {
+      margin: 0;
+      padding: 50px;
+      transition: all 0.3s ease;
+      height: 100%;
+      width: 100%;
+    }
+
+    .custom-select {
+      width: 300px;
+      position: relative;
+      border-radius: 4px;
+      font-family: "Poppins", sans-serif;
+    }
+
+    .custom-select .cs-label {
+      padding: 15px;
+      background: #fff;
+      border-radius: 4px;
+      box-shadow: 0px 6px 25px 6px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .custom-select .cs-label.active {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    .custom-select .cs-label::after {
+      content: '';
+      display: block;
+      width: 24px;
+      height: 24px;
+      transition: all 0.3s ease;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='rgb(0 0 0)'><path d='M11.9999 13.1714L16.9497 8.22168L18.3639 9.63589L11.9999 15.9999L5.63599 9.63589L7.0502 8.22168L11.9999 13.1714Z' /></svg>");
+      position: absolute;
+      right: 10px;
+      top: 15px;
+    }
+
+    .custom-select .cs-label.active::after {
+      transform: rotate(180deg);
+    }
+
+    .custom-select .cs-options {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 100%;
+      transform: translateY(0px);
+      transition: all ease .3s;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .custom-select .cs-options.show {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: all;
+    }
+
+    .custom-select .cs-options .option {
+      padding: 15px;
+      cursor: pointer;
+      border-top: 1px solid #cccccc41;
+      box-shadow: 0px 17px 20px 6px rgba(0, 0, 0, 0.1);
+      opacity: 0;
+      transform: translateY(-10px);
+      background-color: #fff;
+      transition: all 0.3s ease;
+    }
+
+    .custom-select .cs-options.show .option {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+
+<body style="background-color: #ffffff">
+  <div class="custom-select">
+    <div class="cs-label">Select a color</div>
+    <div class="cs-options">
+      <div class="option">
+        Red
+      </div>
+      <div class="option">
+        Blue
+      </div>
+      <div class="option">
+        White
+      </div>
+      <div class="option">
+        Purple
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    document.querySelectorAll('.custom-select').forEach(select => {
+      let isOpen = false;
+      const csLabel = select.querySelector(".cs-label");
+      const csOptions = select.querySelector(".cs-options");
+
+      csLabel.addEventListener('click', () => {
+        isOpen = !isOpen;
+        if (isOpen) {
+          csOptions.classList.add("show");
+          csLabel.classList.add("active");
+          addDynamicDelay(csOptions);
+        } else {
+          csOptions.classList.remove("show");
+          csLabel.classList.remove("active");
+          const options = csOptions.querySelectorAll(".option");
+          options.forEach((option) => {
+            option.style.transitionDelay = '';
+          });
+        }
+      });
+
+      csOptions.querySelectorAll('.option').forEach(option => {
+        option.addEventListener('click', () => {
+          csLabel.textContent = option.textContent;
+          isOpen = false;
+          csOptions.classList.remove("show");
+          csLabel.classList.remove("active");
+          const options = csOptions.querySelectorAll(".option");
+          options.forEach((option) => {
+            option.style.transitionDelay = '';
+          });
+        });
+      });
+
+      document.addEventListener('click', (event) => {
+        if (!select.contains(event.target) && isOpen) {
+          isOpen = false;
+          csOptions.classList.remove("show");
+          csLabel.classList.remove("active");
+          const options = csOptions.querySelectorAll(".option");
+          options.forEach((option) => {
+            option.style.transitionDelay = '';
+          });
+        }
+      });
+    });
+
+    function addDynamicDelay(csOptions) {
+      const options = csOptions.querySelectorAll(".option");
+      options.forEach((option, index) => {
+        option.style.transitionDelay = `${index * 0.2}s`;
+      });
+    }
+  </script>
+</body>
+
+</html>
